@@ -1,0 +1,105 @@
+{
+  "_comment": [
+    "Golden recall test set for Memex.",
+    "Each entry has a `seed` (the memory we plant in advance), one or more",
+    "`queries` (paraphrases or follow-ups), and `relevant_keywords` that the",
+    "retrieved summary MUST contain for the result to count as a hit.",
+    "The benchmark plants ALL seeds, then runs each query and asks the",
+    "retriever for top-5. A hit = at least one retrieved summary contains",
+    "ALL `relevant_keywords` (case-insensitive substring)."
+  ],
+  "items": [
+    {
+      "seed": {
+        "user": "Summarize the RETRO NLU paper on retrieval-augmented semantic parsing.",
+        "response": "RETRO NLU augments task-oriented semantic parsing by retrieving similar utterances at decode time. It outperforms vanilla seq2seq on complex frames and rare intents."
+      },
+      "queries": [
+        "what was that paper on retrieval-augmented parsing again?",
+        "tell me about retro nlu",
+        "the conversational ai retrieval paper"
+      ],
+      "relevant_keywords": ["retro", "nlu"]
+    },
+    {
+      "seed": {
+        "user": "Explain how the KV cache truncation in barge-in works.",
+        "response": "We save a checkpoint of n_tokens before assistant decode. On interrupt we set cancel_event, drain TTS, and rewind n_tokens to the checkpoint via the seq_rm path."
+      },
+      "queries": [
+        "how did we handle interrupting the assistant?",
+        "what did you say about the cancel event?",
+        "kv truncation for barge in"
+      ],
+      "relevant_keywords": ["barge"]
+    },
+    {
+      "seed": {
+        "user": "What's the difference between map-reduce and single-pass document summarization?",
+        "response": "Single-pass fits the whole document in one prompt and produces the highest-fidelity summary. Map-reduce chunks the document, summarizes each chunk, then reduces. Use single-pass when n_ctx allows."
+      },
+      "queries": [
+        "remind me when to use map reduce vs single pass",
+        "summarization strategy for long docs"
+      ],
+      "relevant_keywords": ["map", "reduce"]
+    },
+    {
+      "seed": {
+        "user": "What's speculative prefill and when does it roll back?",
+        "response": "Speculative prefill optimistically prefills the LLM with a stable ASR partial. If the final transcript matches it's a free TTFT win; if not we restore_checkpoint and re-prefill the corrected text."
+      },
+      "queries": [
+        "how does the speculative prefill rollback work?",
+        "what happens if the ASR partial is wrong?",
+        "asr speculation strategy"
+      ],
+      "relevant_keywords": ["speculative", "prefill"]
+    },
+    {
+      "seed": {
+        "user": "How does Memex prune old conversation turns when the KV cache fills up?",
+        "response": "The LivePruner watches occupancy. When kv_len/n_ctx >= 0.8 it compacts the oldest turns via the Summarizer, stores them in Memex, and truncates the KV back to the baseline checkpoint."
+      },
+      "queries": [
+        "what does the live pruner do?",
+        "how do you handle long conversations?",
+        "context window overflow strategy"
+      ],
+      "relevant_keywords": ["prune"]
+    },
+    {
+      "seed": {
+        "user": "Describe the adaptive model router for 2B vs 9B.",
+        "response": "The AdaptiveRouter inspects the input modality (voice/file/text), estimated tokens, and current load score to pick the SIMPLE (2B) or COMPLEX (9B) tier. Voice prefers SIMPLE, files always go COMPLEX."
+      },
+      "queries": [
+        "when does the router pick the big model?",
+        "how is the 2b vs 9b decision made?"
+      ],
+      "relevant_keywords": ["router"]
+    },
+    {
+      "seed": {
+        "user": "What does the BM25 + embedding hybrid retrieval pipeline look like?",
+        "response": "Stage 1: BM25 keyword score on (summary + topics) -> top 50. Stage 2: cosine rerank vs query embedding -> top 20. Stage 3: recency exp decay. Stage 4: importance multiplier. Final top-k returned."
+      },
+      "queries": [
+        "remind me of the recall pipeline",
+        "how does memex retrieval rank results?"
+      ],
+      "relevant_keywords": ["bm25"]
+    },
+    {
+      "seed": {
+        "user": "What's the Piper TTS streaming strategy?",
+        "response": "Piper synthesizes sentence by sentence. The orchestrator pushes each completed sentence to an asyncio queue while the LLM continues decoding, so first audio arrives ~50ms after the first period."
+      },
+      "queries": [
+        "how does the tts overlap with the llm?",
+        "piper streaming approach"
+      ],
+      "relevant_keywords": ["piper"]
+    }
+  ]
+}

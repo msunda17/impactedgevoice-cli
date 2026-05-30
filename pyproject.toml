@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["whisperloop*"]
+
+[project]
+name = "whisperloop"
+version = "0.1.0"
+description = "A fully local, sub-700ms voice assistant."
+authors = [{name = "Antigravity"}]
+dependencies = [
+    "llama-cpp-python",
+    "faster-whisper",
+    "silero-vad",
+    "sounddevice",
+    "piper-tts",
+    "pynvml",
+    "rich",
+    "typer",
+    "numpy",
+    "scipy",
+    "psutil",
+    "pypdf",
+    "huggingface-hub",   # for download_models.py
+]
+
+[project.scripts]
+whisperloop = "whisperloop.main:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-asyncio",
+]
+docs = [
+    "unstructured",     # Advanced document parsing (optional)
+    "markdown",         # Markdown processing
+]
+memex = [
+    "sentence-transformers",   # 384-dim semantic embeddings for recall
+]

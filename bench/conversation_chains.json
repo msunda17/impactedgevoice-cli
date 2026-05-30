@@ -1,0 +1,69 @@
+{
+  "_comment": [
+    "Multi-turn conversation chains used to measure context-awareness.",
+    "Each chain has:",
+    "  prime: a fact established in turn 1 (the model must remember it)",
+    "  follow_ups: list of turns. Each turn has a `query` and an",
+    "    `expected_keyword` list. The benchmark scores 1.0 if any expected",
+    "    keyword (case-insensitive) appears in the assistant's response.",
+    "We run each chain twice: once WITHOUT memex injection (baseline) and",
+    "once WITH it. The delta in accuracy is the 'memex contribution'."
+  ],
+  "chains": [
+    {
+      "name": "name_recall",
+      "prime": {
+        "query": "Hi, my name is Maniketh and I am working on whisperloop.",
+        "expected_keyword": ["nice", "hello", "manik"]
+      },
+      "follow_ups": [
+        {"query": "What's my name?", "expected_keyword": ["maniketh", "manik"]},
+        {"query": "What project did I say I was working on?", "expected_keyword": ["whisperloop"]}
+      ]
+    },
+    {
+      "name": "preference_recall",
+      "prime": {
+        "query": "I prefer my code in Python and I like detailed explanations.",
+        "expected_keyword": ["python", "noted", "ok", "sure"]
+      },
+      "follow_ups": [
+        {"query": "What language do I prefer?", "expected_keyword": ["python"]},
+        {"query": "How do I like my explanations?", "expected_keyword": ["detailed", "thorough"]}
+      ]
+    },
+    {
+      "name": "fact_chaining",
+      "prime": {
+        "query": "Remember this number: 47.",
+        "expected_keyword": ["remember", "ok", "sure", "47"]
+      },
+      "follow_ups": [
+        {"query": "What number did I just give you?", "expected_keyword": ["47"]},
+        {"query": "Double the number I told you earlier.", "expected_keyword": ["94"]}
+      ]
+    },
+    {
+      "name": "document_followup",
+      "prime": {
+        "query": "I just summarized a paper about RETRO NLU for conversational AI semantic parsing.",
+        "expected_keyword": ["retro", "ok", "noted"]
+      },
+      "follow_ups": [
+        {"query": "What was the paper about?", "expected_keyword": ["retro", "retrieval", "semantic"]},
+        {"query": "Does it help with semantic parsing?", "expected_keyword": ["yes", "retro", "parsing"]}
+      ]
+    },
+    {
+      "name": "topic_pivot",
+      "prime": {
+        "query": "Let's talk about distributed systems for a moment.",
+        "expected_keyword": ["distributed", "ok", "sure"]
+      },
+      "follow_ups": [
+        {"query": "What's the CAP theorem?", "expected_keyword": ["consistency", "availability", "partition"]},
+        {"query": "Tying back to my earlier topic, how does that apply?", "expected_keyword": ["distributed"]}
+      ]
+    }
+  ]
+}

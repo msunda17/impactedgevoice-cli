@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg-link
+.pytest_cache/
+build/
+dist/
+
+# Virtualenv
+venv/
+env/
+.venv/
+
+# Models (large binaries)
+models/*.gguf
+models/piper/
+
+# Memex local data
+memex_data/
+
+# Bench artifacts
+bench/latency.jsonl
+bench/results/
+bench/_memex_bench_data/
+
+# IDE
+.vscode/
+.idea/
+
+# Scratch / development experiments (not part of the package)
+scratch_*.py
+test_small.py
+doccli.py
+
+# OS
+.DS_Store
+Thumbs.db
