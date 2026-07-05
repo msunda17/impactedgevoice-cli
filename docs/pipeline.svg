@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 140" role="img" aria-label="Whisperloop voice pipeline">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-dashed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/>
+    </marker>
+    <style>
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 1.5; rx: 6; }
+      .box-accent { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; rx: 6; }
+      .label { font: 600 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .label-sub { font: 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; fill: #475569; text-anchor: middle; dominant-baseline: middle; }
+      .line { stroke: #334155; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .line-dashed { stroke: #64748b; stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrow-dashed); }
+    </style>
+  </defs>
+
+  <!-- Main pipeline -->
+  <rect class="box" x="10" y="48" width="92" height="44"/>
+  <text class="label" x="56" y="70">Microphone</text>
+
+  <rect class="box" x="132" y="48" width="92" height="44"/>
+  <text class="label" x="178" y="70">Silero VAD</text>
+
+  <rect class="box" x="254" y="48" width="118" height="44"/>
+  <text class="label" x="313" y="64">faster-whisper</text>
+  <text class="label-sub" x="313" y="80">ASR</text>
+
+  <rect class="box-accent" x="402" y="48" width="132" height="44"/>
+  <text class="label" x="468" y="64">Llama GGUF</text>
+  <text class="label-sub" x="468" y="80">llama-cpp</text>
+
+  <rect class="box" x="564" y="48" width="92" height="44"/>
+  <text class="label" x="610" y="70">Piper TTS</text>
+
+  <rect class="box" x="686" y="48" width="92" height="44"/>
+  <text class="label" x="732" y="70">Speaker</text>
+
+  <line class="line" x1="102" y1="70" x2="128" y2="70"/>
+  <line class="line" x1="224" y1="70" x2="250" y2="70"/>
+  <line class="line" x1="372" y1="70" x2="398" y2="70"/>
+  <line class="line" x1="534" y1="70" x2="560" y2="70"/>
+  <line class="line" x1="656" y1="70" x2="682" y2="70"/>
+
+  <!-- Side inputs -->
+  <rect class="box" x="402" y="8" width="132" height="32"/>
+  <text class="label" x="468" y="24">Memex memory</text>
+
+  <rect class="box" x="564" y="8" width="152" height="32"/>
+  <text class="label" x="640" y="24">Persistent KV cache</text>
+
+  <line class="line-dashed" x1="468" y1="40" x2="468" y2="46"/>
+  <line class="line-dashed" x1="640" y1="40" x2="500" y2="46"/>
+</svg>

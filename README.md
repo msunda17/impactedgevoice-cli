@@ -84,6 +84,10 @@ The interactive menu offers four modes:
 
 ## Architecture: The Five Crown Jewels
 
+At runtime, audio flows through a streaming pipeline while Memex and the KV cache feed the LLM in parallel:
+
+![Whisperloop voice pipeline](docs/pipeline.svg)
+
 ### 1. Persistent KV Cache (`kv_cache.py`)
 The system prompt is tokenised and prefilled **once** at startup. Every subsequent turn appends tokens to the live KV cache rather than re-encoding the full history. Named checkpoints (`system`, `primed`, `pre_assistant`) allow O(1) rollback via `llama_kv_cache_seq_rm()`.
 
