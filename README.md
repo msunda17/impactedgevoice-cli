@@ -1,8 +1,8 @@
-# Whisperloop
+# ImpactEdgeVoice
 
 **Fully local, sub-700 ms voice assistant — mic to speaker, zero network.**
 
-Whisperloop is an inference-systems project built around five technical constraints that make local voice AI interesting: persistent KV cache, interrupt-safe barge-in, speculative prefill, long-term memory (Memex), and adaptive model routing. Everything runs on a single consumer laptop; no audio or text ever leaves the device.
+ImpactEdgeVoice is an inference-systems project built around five technical constraints that make local voice AI interesting: persistent KV cache, interrupt-safe barge-in, speculative prefill, long-term memory (Memex), and adaptive model routing. Everything runs on a single consumer laptop; no audio or text ever leaves the device.
 
 ---
 
@@ -22,8 +22,8 @@ Whisperloop is an inference-systems project built around five technical constrai
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-org/whisperloop.git
-cd whisperloop
+git clone https://github.com/msunda17/impactedgevoice-cli.git
+cd impactedgevoice-cli
 
 # 2. Create virtualenv
 python -m venv venv
@@ -36,7 +36,7 @@ pip install -e ".[memex]"
 python download_models.py
 
 # 5. Run
-python -m whisperloop
+python -m impactedgevoice
 ```
 
 > **GPU acceleration**: install `llama-cpp-python` with your backend before step 3.
@@ -63,14 +63,14 @@ Models live in `models/` (gitignored). Run `python download_models.py` to fetch 
 | Complex | `Llama-3.2-3B-Instruct-Q4_K_M.gguf` | ~2.0 GB | Documents, reasoning |
 | TTS | `models/piper/en_US-lessac-medium.onnx` | ~65 MB | Speech synthesis |
 
-The router auto-discovers any matching GGUF in `models/` — see `whisperloop/model_router.py` for the full candidate list.
+The router auto-discovers any matching GGUF in `models/` — see `impactedgevoice/model_router.py` for the full candidate list.
 
 ---
 
 ## Modes
 
 ```
-python -m whisperloop
+python -m impactedgevoice
 ```
 
 The interactive menu offers four modes:
@@ -131,7 +131,7 @@ Results are written to `bench/latency.jsonl` (gitignored). See `bench/gemini_com
 ## Project Structure
 
 ```
-whisperloop/
+impactedgevoice/
 ├── orchestrator.py         # Main event loop — coordinates all components
 ├── kv_cache.py             # Crown Jewel #1: persistent KV + checkpoint/restore
 ├── bargein.py              # Crown Jewel #2: state machine + interrupt
@@ -180,7 +180,7 @@ pip install -e ".[memex,test]"
 pytest tests/ -v
 
 # Lint (optional)
-pip install ruff && ruff check whisperloop/
+pip install ruff && ruff check impactedgevoice/
 ```
 
 ---

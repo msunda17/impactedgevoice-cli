@@ -11,7 +11,7 @@ from __future__ import annotations
 import time
 from typing import Iterable
 
-from whisperloop.memex.storage import MemoryRow
+from impactedgevoice.memex.storage import MemoryRow
 
 # Hard cap to keep prefill latency bounded.
 MAX_MEMEX_CHARS = 1800  # ~450 tokens at 4 chars/token

@@ -1,5 +1,5 @@
 """
-download_models.py — Download the recommended model suite for Whisperloop.
+download_models.py — Download the recommended model suite for ImpactEdgeVoice.
 
 Recommended suite:
   * Llama 3.2 1B Q4  — Simple voice Q&A (fast, ~0.8 GB)
@@ -40,7 +40,7 @@ MODELS = {
 
 
 def download_gguf(repo: str, filename: str) -> bool:
-    """Download a GGUF model from HuggingFace using huggingface-cli."""
+    """Download a GGUF model from HuggingFace using hf CLI."""
     url = f"https://huggingface.co/{repo}/resolve/main/{filename}"
 
     print(f"\nDownloading {filename} from {repo}...")
@@ -48,7 +48,7 @@ def download_gguf(repo: str, filename: str) -> bool:
 
     try:
         result = subprocess.run(
-            ["huggingface-cli", "download", repo, filename, "--local-dir", MODELS_DIR],
+            ["hf", "download", repo, filename, "--local-dir", MODELS_DIR],
             capture_output=True,
             text=True,
             check=True,
@@ -60,7 +60,7 @@ def download_gguf(repo: str, filename: str) -> bool:
         print(f"stderr: {e.stderr}")
         return False
     except FileNotFoundError:
-        print("✗ huggingface-cli not found. Install with: pip install huggingface-hub")
+        print("✗ hf CLI not found. Install with: pip install huggingface-hub")
         return False
 
 
@@ -74,7 +74,7 @@ def main():
     os.makedirs(MODELS_DIR, exist_ok=True)
 
     print("=" * 60)
-    print("Whisperloop Model Download Tool")
+    print("ImpactEdgeVoice Model Download Tool")
     print("=" * 60)
     print("\nRecommended model suite for adaptive routing:")
 
@@ -107,7 +107,7 @@ def main():
 
     print("\n" + "=" * 60)
     print("Download complete!")
-    print("Run: python -m whisperloop")
+    print("Run: python -m impactedgevoice")
     print("=" * 60)
 
 

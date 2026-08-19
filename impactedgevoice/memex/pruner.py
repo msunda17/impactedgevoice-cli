@@ -18,8 +18,8 @@ import logging
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from whisperloop.kv_cache import KVCacheManager
-    from whisperloop.memex.manager import Memex
+    from impactedgevoice.kv_cache import KVCacheManager
+    from impactedgevoice.memex.manager import Memex
 
 logger = logging.getLogger(__name__)
 

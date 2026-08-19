@@ -36,7 +36,7 @@ from typing import Optional
 import numpy as np
 import sounddevice as sd
 
-from whisperloop.kv_cache import KVCacheManager
+from impactedgevoice.kv_cache import KVCacheManager
 
 logger = logging.getLogger(__name__)
 

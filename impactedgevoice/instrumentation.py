@@ -29,7 +29,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Dict, Optional, Union
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +37,12 @@ logger = logging.getLogger(__name__)
 class LatencyLogger:
     """Writes JSONL latency events. Cheap (one line per event)."""
 
-    def __init__(self, path: str | Path = "bench/latency.jsonl"):
+    def __init__(self, path: Union[str, Path] = "bench/latency.jsonl"):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._file = open(self.path, "a", encoding="utf-8", buffering=1)  # line-buffered
         self._turn = 0
-        self._stage_starts: dict[str, float] = {}
+        self._stage_starts: Dict[str, float] = {}
         logger.info("[LATENCY] Logging to %s", self.path)
 
     def next_turn(self) -> int:

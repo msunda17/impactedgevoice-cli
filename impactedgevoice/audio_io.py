@@ -6,7 +6,7 @@ class AudioStreamer:
     def __init__(self, sample_rate: int = 16000, chunk_size: int = 512):
         self.sample_rate = sample_rate
         self.chunk_size = chunk_size
-        self.audio_queue = asyncio.Queue()
+        self.audio_queue = None
         self.stream = None
 
     def audio_callback(self, indata, frames, time_info, status):
@@ -18,6 +18,7 @@ class AudioStreamer:
     def start_recording(self):
         # Capture the event loop here (after asyncio.run has started)
         self.loop = asyncio.get_running_loop()
+        self.audio_queue = asyncio.Queue()
         self.stream = sd.InputStream(
             samplerate=self.sample_rate,
             channels=1,

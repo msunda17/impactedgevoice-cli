@@ -1,11 +1,11 @@
 """
-cli.py — Unified Whisperloop entry point.
+cli.py — Unified ImpactEdgeVoice entry point.
 
 Replaces separate voice/doc CLIs. Single command auto-routes:
-    python -m whisperloop                       # Live voice mode (default)
-    python -m whisperloop "summarize foo.pdf"   # Document mode (auto-detected)
-    python -m whisperloop "what is 2+2?"        # Text mode → 2B
-    python -m whisperloop "analyze this contract..."  # Text mode → 9B
+    python -m impactedgevoice                       # Live voice mode (default)
+    python -m impactedgevoice "summarize foo.pdf"   # Document mode (auto-detected)
+    python -m impactedgevoice "what is 2+2?"        # Text mode → 2B
+    python -m impactedgevoice "analyze this contract..."  # Text mode → 9B
 
 Flags:
     --force-tier simple|complex   # Override the adaptive decision
@@ -18,29 +18,29 @@ import logging
 import sys
 from pathlib import Path
 
-from whisperloop.adaptive_router import AdaptiveRouter, InputModality
-from whisperloop.model_router import TaskTier
+from impactedgevoice.adaptive_router import AdaptiveRouter, InputModality
+from impactedgevoice.model_router import TaskTier
 
 logger = logging.getLogger(__name__)
 
 
 def cmd_voice_mode():
     """Live voice interaction (existing orchestrator)."""
-    from whisperloop.orchestrator import Orchestrator
+    from impactedgevoice.orchestrator import Orchestrator
     orch = Orchestrator()
     asyncio.run(orch.run())
 
 
 def cmd_file_mode(file_path: str, max_tokens: int, decision):
     """Document/audio file processing."""
-    from whisperloop.document_processor import DocumentProcessor
+    from impactedgevoice.document_processor import DocumentProcessor
 
     path = Path(file_path)
     suffix = path.suffix.lower()
 
     if suffix in ('.wav', '.mp3', '.m4a'):
         # Audio file → transcribe + summarize
-        from whisperloop.asr import ASR
+        from impactedgevoice.asr import ASR
         import numpy as np
         import soundfile as sf
 
@@ -75,7 +75,7 @@ def cmd_text_mode(query: str, max_tokens: int, kv):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Whisperloop — adaptive local AI assistant (voice + docs)"
+        description="ImpactEdgeVoice — adaptive local AI assistant (voice + docs)"
     )
     parser.add_argument(
         'input',

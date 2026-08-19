@@ -23,19 +23,19 @@ from typing import Optional
 
 import numpy as np
 
-from whisperloop.audio_io import AudioStreamer, play_audio_async
-from whisperloop.bargein import BargeInController, State
-from whisperloop.console import (
+from impactedgevoice.audio_io import AudioStreamer, play_audio_async
+from impactedgevoice.bargein import BargeInController, State
+from impactedgevoice.console import (
     style_bot, style_muted, style_separator, style_system, style_you,
 )
-from whisperloop.instrumentation import LatencyLogger
-from whisperloop.kv_cache import KVCacheManager
-from whisperloop.asr import ASR, StreamingASR
-from whisperloop.speculative_prefill import SpeculativePrefillController
-from whisperloop.memex import Memex
-from whisperloop.memex.pruner import LivePruner
-from whisperloop.tts import TTS
-from whisperloop.vad import VAD
+from impactedgevoice.instrumentation import LatencyLogger
+from impactedgevoice.kv_cache import KVCacheManager
+from impactedgevoice.asr import ASR, StreamingASR
+from impactedgevoice.speculative_prefill import SpeculativePrefillController
+from impactedgevoice.memex import Memex
+from impactedgevoice.memex.pruner import LivePruner
+from impactedgevoice.tts import TTS
+from impactedgevoice.vad import VAD
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class Orchestrator:
         memex: Optional[Memex] = None,
         baseline_checkpoint: str = "system",
     ):
-        print("--- Initializing Whisperloop Orchestrator ---")
+        print("--- Initializing ImpactEdgeVoice Orchestrator ---")
         self.audio_streamer = AudioStreamer(chunk_size=512)
         self.vad = VAD()
         self.asr = ASR(model_size="small.en")
@@ -77,11 +77,11 @@ class Orchestrator:
         else:
             # Auto-pick the simple tier via the shared ModelRouter so we use
             # whatever GGUF is actually available rather than a hardcoded path.
-            from whisperloop.model_router import ModelRouter, TaskTier
+            from impactedgevoice.model_router import ModelRouter, TaskTier
             router = ModelRouter()
             self.kv = router.select_model(query="voice chat", force_tier=TaskTier.SIMPLE)
 
-        self.tts_queue: asyncio.Queue = asyncio.Queue()
+        self.tts_queue: Optional[asyncio.Queue] = None
         self.bargein = BargeInController(self.kv, self.tts_queue)
         self.latency = LatencyLogger("bench/latency.jsonl")
         
@@ -124,6 +124,11 @@ class Orchestrator:
                 The LLM generates a response that's streamed to TTS, then the
                 mic takes over for follow-ups. Used by Text mode.
         """
+        # Create queues now that the event loop is running
+        if self.tts_queue is None:
+            self.tts_queue = asyncio.Queue()
+            self.bargein.tts_queue = self.tts_queue
+        
         playback_task = asyncio.create_task(self.playback_worker())
 
         # 1) Optional opening announcement (e.g. document summary aloud)

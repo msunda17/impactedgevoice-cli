@@ -7,7 +7,7 @@ Separate from the voice orchestrator. Designed for:
   * Text output (no TTS)
 
 Usage:
-    from whisperloop.document_processor import DocumentProcessor
+    from impactedgevoice.document_processor import DocumentProcessor
     
     proc = DocumentProcessor()
     summary = proc.summarize_file("paper.pdf", method="map_reduce")
@@ -19,8 +19,8 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from whisperloop.kv_cache import KVCacheManager
-from whisperloop.model_router import ModelRouter, TaskTier
+from impactedgevoice.kv_cache import KVCacheManager
+from impactedgevoice.model_router import ModelRouter, TaskTier
 
 logger = logging.getLogger(__name__)
 

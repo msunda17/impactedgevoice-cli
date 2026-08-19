@@ -19,7 +19,7 @@ import threading
 import time
 from typing import Optional, Callable
 
-from whisperloop.kv_cache import KVCacheManager
+from impactedgevoice.kv_cache import KVCacheManager
 
 logger = logging.getLogger(__name__)
 

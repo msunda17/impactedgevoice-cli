@@ -28,7 +28,7 @@ def kv_manager():
     Load the model once for all tests in this module — expensive, do it once.
     scope="module" means one fixture instance shared across all test functions.
     """
-    from whisperloop.kv_cache import KVCacheManager
+    from impactedgevoice.kv_cache import KVCacheManager
     mgr = KVCacheManager(model_path=MODEL_PATH, n_ctx=4096, n_gpu_layers=-1)
     mgr.load()
     mgr.warm_up()  # Prefill system prompt once — all tests share this state

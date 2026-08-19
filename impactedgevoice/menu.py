@@ -1,7 +1,7 @@
 """
-menu.py — Interactive mode picker for Whisperloop.
+menu.py — Interactive mode picker for ImpactEdgeVoice.
 
-Presented at startup when the user runs `python -m whisperloop` with no args.
+Presented at startup when the user runs `python -m impactedgevoice` with no args.
 Each mode is dispatched into the appropriate runtime (voice orchestrator,
 document processor, text Q&A, etc.).
 """
@@ -15,8 +15,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
 
-from whisperloop.adaptive_router import AdaptiveRouter, InputModality
-from whisperloop.model_router import ModelRouter, TaskTier
+from impactedgevoice.adaptive_router import AdaptiveRouter, InputModality
+from impactedgevoice.model_router import ModelRouter, TaskTier
 
 logger = logging.getLogger(__name__)
 
@@ -78,9 +78,9 @@ def _prompt_choice(modes: list[Mode]) -> Optional[Mode]:
 def handle_voice(router: AdaptiveRouter) -> None:
     """Live microphone-driven conversation (no seed)."""
     print("\n  → Voice mode. Speak naturally. Ctrl+C to exit.\n")
-    from whisperloop.orchestrator import Orchestrator
+    from impactedgevoice.orchestrator import Orchestrator
     # Reuse the AdaptiveRouter's simple-tier KV so we don't double-load.
-    from whisperloop.model_router import TaskTier
+    from impactedgevoice.model_router import TaskTier
     kv = router.router.select_model(query="voice chat", force_tier=TaskTier.SIMPLE)
     orch = Orchestrator(kv=kv)
     try:
@@ -119,7 +119,7 @@ def _file_mode_limits(router: AdaptiveRouter) -> Optional[dict]:
     without loading it (we avoid loading just to print a help message).
     """
     try:
-        from whisperloop.document_processor import DocumentProcessor
+        from impactedgevoice.document_processor import DocumentProcessor
         # We intentionally don't force-load the complex model here — just read
         # the configured n_ctx ceiling from the router so the CLI is responsive.
         n_ctx = getattr(router.model_router, "n_ctx_complex", 8192)
@@ -266,7 +266,7 @@ def handle_file(router: AdaptiveRouter) -> None:
     # Hand off to the voice Orchestrator. The summary is spoken aloud as the
     # opening announcement, then the mic takes over for follow-up questions.
     spoken_summary = _shorten_for_speech(summary)
-    from whisperloop.orchestrator import Orchestrator
+    from impactedgevoice.orchestrator import Orchestrator
     orch = Orchestrator(kv=kv, baseline_checkpoint="primed")
     try:
         asyncio.run(orch.run(opening_announcement=spoken_summary))
@@ -296,7 +296,7 @@ def handle_text(router: AdaptiveRouter) -> None:
     # Hand off to the voice Orchestrator. The typed prompt is treated as the
     # first "user turn"; the Orchestrator generates a reply with TTS, then the
     # mic takes over for the rest of the conversation.
-    from whisperloop.orchestrator import Orchestrator
+    from impactedgevoice.orchestrator import Orchestrator
     orch = Orchestrator(kv=kv)
     try:
         asyncio.run(orch.run(initial_user_text=first))
@@ -311,7 +311,7 @@ def handle_model_settings(router: AdaptiveRouter) -> None:
     If the chosen model isn't downloaded yet it will be fetched automatically
     when that tier next loads (via _resolve_model → _prompt_and_download).
     """
-    from whisperloop.model_router import TaskTier, CANDIDATE_REGISTRY
+    from impactedgevoice.model_router import TaskTier, CANDIDATE_REGISTRY
 
     print("\n  → Model Settings")
     print("    Choose which model to use for each tier.")
@@ -511,7 +511,7 @@ def _summarize_document(
     path: Path, use_chunking: bool, router: AdaptiveRouter
 ) -> tuple[str, str]:
     """Returns (summary, source_text). Uses the shared model router."""
-    from whisperloop.document_processor import DocumentProcessor
+    from impactedgevoice.document_processor import DocumentProcessor
     # Share the underlying ModelRouter so we don't double-load the LLM.
     proc = DocumentProcessor(model_router=router.router)
     method = "map_reduce" if use_chunking else "single_pass"
@@ -539,8 +539,8 @@ def _summarize_audio(
     except ImportError:
         print("    ✗ soundfile not installed. Run: pip install soundfile")
         return "", ""
-    from whisperloop.asr import ASR
-    from whisperloop.document_processor import DocumentProcessor
+    from impactedgevoice.asr import ASR
+    from impactedgevoice.document_processor import DocumentProcessor
 
     print("    Transcribing audio...")
     audio, sr = sf.read(str(path))

@@ -20,8 +20,8 @@ from typing import Optional
 
 import numpy as np
 
-from whisperloop.memex.storage import MemexStorage, MemoryRow
-from whisperloop.memex.embedder import Embedder
+from impactedgevoice.memex.storage import MemexStorage, MemoryRow
+from impactedgevoice.memex.embedder import Embedder
 
 logger = logging.getLogger(__name__)
 

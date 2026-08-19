@@ -47,9 +47,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from whisperloop.kv_cache import KVCacheManager
-from whisperloop.memex import Memex
-from whisperloop.console import configure_logging
+from impactedgevoice.kv_cache import KVCacheManager
+from impactedgevoice.memex import Memex
+from impactedgevoice.console import configure_logging
 
 MODEL_PATH = "models/Llama-3.2-1B-Instruct-Q4_K_M.gguf"
 DEFAULT_CHAINS = "bench/conversation_chains.json"

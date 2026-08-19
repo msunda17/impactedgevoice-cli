@@ -14,7 +14,7 @@ We measure four things end-to-end, **without** loading the LLM:
 
 Why no LLM here:
   Memex summarization currently uses the extractive fallback when sharing the
-  conversation KV (see whisperloop/memex/summarizer.py). The LLM-based path is
+  conversation KV (see impactedgevoice/memex/summarizer.py). The LLM-based path is
   benchmarked separately by bench_context.py once a dedicated summarizer
   model is wired in. Isolating memex from the model keeps these numbers
   comparable across runs and reproducible on machines that can't load llama.
@@ -38,7 +38,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from whisperloop.memex import Memex
+from impactedgevoice.memex import Memex
 
 
 # ---------------------------------------------------------------------- #
@@ -87,7 +87,7 @@ def _synth_pair(i: int) -> tuple[str, str]:
         f"Here is what we discussed about {topic} in turn {i}. "
         f"It relates to local-first inference and low-latency pipelines, "
         f"with relevant numbers like {i * 7 % 1000} ms and entities like "
-        f"Whisperloop, llama.cpp, and faster-whisper."
+        f"ImpactEdgeVoice, llama.cpp, and faster-whisper."
     )
     return user, response
 

@@ -227,7 +227,7 @@ For a single-user, single-machine assistant with <1 M memories, SQLite + memory-
 Each turn already pays the 2B cost for the response (in voice mode). Summarization is a "free" reuse — same model warm in memory. 9B summarization would more than double turn latency for marginal quality gain on 80-token outputs.
 
 **Q: Why hybrid retrieval — isn't embedding similarity enough?**
-Embedding similarity has weak grounding on rare proper nouns ("Whisperloop", "kv_cache_seq_rm"). BM25 catches those. The combo gives recall on both semantic paraphrases and specific terminology — the same architecture Google uses (BM25 prefilter, neural rerank).
+Embedding similarity has weak grounding on rare proper nouns ("ImpactEdgeVoice", "kv_cache_seq_rm"). BM25 catches those. The combo gives recall on both semantic paraphrases and specific terminology — the same architecture Google uses (BM25 prefilter, neural rerank).
 
 **Q: Why per-turn re-prefill of the MEMEX block?**
 Memories change every turn (new ones added, old ones recalled). Caching stale MEMEX content in the KV cache means the model is always one turn behind. The 50–100 ms extra prefill is the price of fresh recall. The system prompt and conversation history still live in the persistent cache — only the MEMEX block re-prefills.
@@ -264,7 +264,7 @@ All data is local — no cloud sync. Users can `wipe`, `clear-session`, or run w
 ## 12. File Layout (Implemented)
 
 ```
-whisperloop/
+impactedgevoice/
   memex/
     __init__.py       # Public API (Memex, Memory)
     manager.py        # Memex.store(), .recall(), .recall_block()

@@ -1,6 +1,6 @@
 """
 bench.py — Reproducible latency benchmark for the LLM + TTS portion of
-the whisperloop pipeline.
+the impactedgevoice pipeline.
 
 What it measures (per prompt, per turn):
     prefill_ms          — user tokens prefilled into the KV cache
@@ -38,8 +38,8 @@ from pathlib import Path
 # Allow `python -m bench.bench` from repo root
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from whisperloop.kv_cache import KVCacheManager
-from whisperloop.tts import TTS
+from impactedgevoice.kv_cache import KVCacheManager
+from impactedgevoice.tts import TTS
 
 MODEL_PATH = "models/Llama-3.2-1B-Instruct-Q4_K_M.gguf"
 TTS_PATH = "models/piper/en_US-lessac-medium.onnx"

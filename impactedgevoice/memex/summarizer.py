@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from whisperloop.kv_cache import KVCacheManager
+    from impactedgevoice.kv_cache import KVCacheManager
 
 logger = logging.getLogger(__name__)
 

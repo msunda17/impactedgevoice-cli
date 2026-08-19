@@ -34,7 +34,7 @@ MODEL_PATH = str(Path(__file__).parent.parent / "models" / "Llama-3.2-1B-Instruc
 
 @pytest.fixture(scope="module")
 def kv_manager():
-    from whisperloop.kv_cache import KVCacheManager
+    from impactedgevoice.kv_cache import KVCacheManager
     mgr = KVCacheManager(model_path=MODEL_PATH, n_ctx=2048, n_gpu_layers=-1)
     mgr.load()
     mgr.warm_up()
@@ -43,7 +43,7 @@ def kv_manager():
 
 @pytest.fixture
 def controller(kv_manager):
-    from whisperloop.bargein import BargeInController
+    from impactedgevoice.bargein import BargeInController
     q: asyncio.Queue = asyncio.Queue()
     return BargeInController(kv_manager, q)
 
@@ -53,19 +53,19 @@ def controller(kv_manager):
 # ---------------------------------------------------------------------- #
 
 def test_initial_state_is_idle(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     assert controller.state == State.IDLE
 
 
 def test_idle_to_user_speaking_on_speech_start(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     ok = controller.on_user_speech_start()
     assert ok is True
     assert controller.state == State.USER_SPEAKING
 
 
 def test_duplicate_speech_start_is_noop(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     controller.on_user_speech_start()
     ok = controller.on_user_speech_start()
     assert ok is False
@@ -73,14 +73,14 @@ def test_duplicate_speech_start_is_noop(controller):
 
 
 def test_user_speaking_to_thinking_on_speech_end(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     controller.on_user_speech_start()
     controller.on_user_speech_end()
     assert controller.state == State.THINKING
 
 
 def test_thinking_to_speaking_on_first_audio(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     controller.on_user_speech_start()
     controller.on_user_speech_end()
     controller.on_first_tts_audio()
@@ -88,7 +88,7 @@ def test_thinking_to_speaking_on_first_audio(controller):
 
 
 def test_speaking_to_idle_on_turn_complete(controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
     controller.on_user_speech_start()
     controller.on_user_speech_end()
     controller.on_first_tts_audio()
@@ -150,7 +150,7 @@ def test_should_interrupt_ignored_when_not_speaking(controller):
 
 @pytest.mark.asyncio
 async def test_interrupt_drains_tts_queue_and_truncates_kv(kv_manager, controller):
-    from whisperloop.bargein import State
+    from impactedgevoice.bargein import State
 
     # Move into SPEAKING
     _into_speaking(controller)

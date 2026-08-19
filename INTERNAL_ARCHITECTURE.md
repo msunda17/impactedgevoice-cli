@@ -1,6 +1,6 @@
-# Whisperloop Architecture & Knowledge Base
+# ImpactEdgeVoice Architecture & Knowledge Base
 
-This document serves as a persistent record of the core concepts, prerequisites, and underlying architecture for each day's implementation of the Whisperloop project. As the project evolves from a synchronous pipeline to an asynchronous, highly optimized serving layer, this document will expand.
+This document serves as a persistent record of the core concepts, prerequisites, and underlying architecture for each day's implementation of the ImpactEdgeVoice project. As the project evolves from a synchronous pipeline to an asynchronous, highly optimized serving layer, this document will expand.
 
 ---
 
@@ -396,7 +396,7 @@ The `restore_checkpoint()` uses `llama_kv_cache_seq_rm()` to truncate the cache 
 ### Code Structure
 
 ```
-whisperloop/
+impactedgevoice/
 ├── asr.py                    # ASR + StreamingASR
 ├── speculative_prefill.py    # SpeculativePrefillController (NEW)
 ├── orchestrator.py           # Integration point
@@ -575,7 +575,7 @@ memex_data/                 # gitignored, all-local
 └── embeddings.npy         # numpy memmap, 384 × N float32
 ```
 
-CLI controls (planned): `whisperloop memex stats`, `whisperloop memex search`, `whisperloop memex wipe`, `--no-memex` flag.
+CLI controls (planned): `impactedgevoice-cli memex stats`, `impactedgevoice-cli memex search`, `impactedgevoice-cli memex wipe`, `--no-memex` flag.
 
 ### Whiteboarding — Day 6
 
@@ -687,7 +687,7 @@ Full strategy doc: `bench/gemini_comparison.md`. The key points:
 
 Cloud APIs are **opaque** — we can see `audio_sent → audio_received` boundaries but not internal stages. So a head-to-head comparison must use **identical, observable boundaries**:
 
-| Boundary | Whisperloop measures | Gemini Live exposes |
+| Boundary | ImpactEdgeVoice measures | Gemini Live exposes |
 |---|---|---|
 | Audio sent (start) | yes | yes (we control) |
 | First audio received | yes | yes (we receive) |
@@ -705,16 +705,16 @@ The only honest end-to-end metric: `e2e_ttfb_ms = mic_capture_start → first_au
 | **Tail bound** | p99/p50 ratio — local should be < 2×, cloud often 3-5× (network jitter). |
 | **ASR WER** | `jiwer` on LibriSpeech-clean subset. |
 | **Reasoning quality** | `bench_context.py` chain accuracy at parity model size (3B Q4 vs Gemini Flash). |
-| **Cross-session memory** | Plant in session A, query in session B 24h later. Whisperloop hits via Memex; Gemini Live structurally cannot. |
-| **Long-conversation handling** | 50-turn varying-topic test. Whisperloop: `LivePruner` fires; recall stays high. Gemini Live: behavior undocumented. |
+| **Cross-session memory** | Plant in session A, query in session B 24h later. ImpactEdgeVoice hits via Memex; Gemini Live structurally cannot. |
+| **Long-conversation handling** | 50-turn varying-topic test. ImpactEdgeVoice: `LivePruner` fires; recall stays high. Gemini Live: behavior undocumented. |
 | **Cost** | Provider $/min × measured tokens. Local = $0. |
 | **Privacy / offline** | Categorical (not measured — stated). |
 
-#### Where Whisperloop wins, structurally
+#### Where ImpactEdgeVoice wins, structurally
 
 - **p99 latency is bounded** by local hardware, not by a shared-tenant network.
 - **Persistent cross-session memory** — Gemini Live keeps an in-session context only; Memex survives reboot.
-- **Live KV pruning** — Whisperloop handles infinite-length conversations gracefully via `LivePruner`; cloud APIs typically drop the websocket past their context limit.
+- **Live KV pruning** — ImpactEdgeVoice handles infinite-length conversations gracefully via `LivePruner`; cloud APIs typically drop the websocket past their context limit.
 - **$0 marginal cost, fully offline, no audio leaves the device.**
 
 #### Where it doesn't, and we should be honest
@@ -1270,8 +1270,8 @@ The system has no Acoustic Echo Cancellation. Instead:
 ## Repository Map (Current State)
 
 ```
-whisperloop/
-├── whisperloop/
+impactedgevoice-cli/
+├── impactedgevoice/
 │   ├── orchestrator.py       — async FSM dispatcher, Memex + Pruner hooks
 │   ├── bargein.py            — Crown Jewel #2: state machine + interrupt
 │   ├── kv_cache.py           — Crown Jewel #1: persistent KV + truncation
@@ -1318,7 +1318,7 @@ whisperloop/
 ## Whiteboarding Cheat Sheet (1-Page Interview Defense)
 
 ### The 60-Second Pitch
-> "Whisperloop is a fully local voice assistant — mic to speaker, no network — running on a consumer laptop. Five things make it interesting as an inference systems project:
+> "ImpactEdgeVoice is a fully local voice assistant — mic to speaker, no network — running on a consumer laptop. Five things make it interesting as an inference systems project:
 >
 > 1. **Persistent KV cache across turns.** I own the llama.cpp context directly via the low-level `eval`/`sample` API, prefill the system prompt once, and verify a strict KV-growth invariant after every turn. Turn 2+ prefill is 10× faster than turn 1.
 >

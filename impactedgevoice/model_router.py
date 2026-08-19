@@ -17,7 +17,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
-from whisperloop.kv_cache import KVCacheManager
+from impactedgevoice.kv_cache import KVCacheManager
 
 logger = logging.getLogger(__name__)
 

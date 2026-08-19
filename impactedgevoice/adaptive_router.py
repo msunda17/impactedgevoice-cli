@@ -16,8 +16,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-from whisperloop.model_router import ModelRouter, TaskTier
-from whisperloop.kv_cache import KVCacheManager
+from impactedgevoice.model_router import ModelRouter, TaskTier
+from impactedgevoice.kv_cache import KVCacheManager
 
 logger = logging.getLogger(__name__)
 

@@ -13,12 +13,12 @@
     {
       "name": "name_recall",
       "prime": {
-        "query": "Hi, my name is Maniketh and I am working on whisperloop.",
+        "query": "Hi, my name is Maniketh and I am working on impactedgevoice.",
         "expected_keyword": ["nice", "hello", "manik"]
       },
       "follow_ups": [
         {"query": "What's my name?", "expected_keyword": ["maniketh", "manik"]},
-        {"query": "What project did I say I was working on?", "expected_keyword": ["whisperloop"]}
+        {"query": "What project did I say I was working on?", "expected_keyword": ["impactedgevoice"]}
       ]
     },
     {

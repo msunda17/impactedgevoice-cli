@@ -18,12 +18,12 @@ import uuid
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-from whisperloop.memex.storage import MemexStorage, MemoryRow
-from whisperloop.memex.summarizer import Summarizer, MemorySummary
-from whisperloop.memex.embedder import Embedder
-from whisperloop.memex.retriever import Retriever
-from whisperloop.memex.injector import build_memex_block
-from whisperloop.memex.linker import MemoryLinker
+from impactedgevoice.memex.storage import MemexStorage, MemoryRow
+from impactedgevoice.memex.summarizer import Summarizer, MemorySummary
+from impactedgevoice.memex.embedder import Embedder
+from impactedgevoice.memex.retriever import Retriever
+from impactedgevoice.memex.injector import build_memex_block
+from impactedgevoice.memex.linker import MemoryLinker
 
 logger = logging.getLogger(__name__)
 

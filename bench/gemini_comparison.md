@@ -1,12 +1,12 @@
-# Comparing Whisperloop vs Gemini Live (and Other Cloud Voice Agents)
+# Comparing ImpactEdgeVoice vs Gemini Live (and Other Cloud Voice Agents)
 
-This document explains **what we measure**, **what we can't measure**, and **what a fair head-to-head benchmark looks like** when comparing a local-first stack like Whisperloop against a closed cloud service like Gemini Live (or OpenAI Realtime, ElevenLabs Conversational AI, etc.).
+This document explains **what we measure**, **what we can't measure**, and **what a fair head-to-head benchmark looks like** when comparing a local-first stack like ImpactEdgeVoice against a closed cloud service like Gemini Live (or OpenAI Realtime, ElevenLabs Conversational AI, etc.).
 
 ---
 
 ## TL;DR — The Bottom Line
 
-| Dimension                   | Whisperloop (local)             | Gemini Live (cloud)              | How we measure it                  |
+| Dimension                   | ImpactEdgeVoice (local)             | Gemini Live (cloud)              | How we measure it                  |
 | --------------------------- | ------------------------------- | -------------------------------- | ---------------------------------- |
 | **TTFT (mic→first audio)**  | 400-700 ms                      | 600-1500 ms (network-bound)      | Same harness, both record from a WAV |
 | **Tail latency p99**        | Bounded by local CPU/GPU         | Unbounded (network jitter, GC)   | 100+ turns, log p99                |
@@ -17,7 +17,7 @@ This document explains **what we measure**, **what we can't measure**, and **wha
 | **Memex / cross-session**   | Persistent SQLite + embeddings  | Bounded conversation memory      | Recall@5 on planted facts          |
 | **Offline / planes / SCIFs**| Works                            | Doesn't                          | Categorical                        |
 
-Whisperloop **wins on tail latency, cost, privacy, and offline**. Gemini Live **wins on raw ASR quality and on reasoning quality at parity model size**. The interesting question isn't "which is better" but "**where is the parity boundary?**"
+ImpactEdgeVoice **wins on tail latency, cost, privacy, and offline**. Gemini Live **wins on raw ASR quality and on reasoning quality at parity model size**. The interesting question isn't "which is better" but "**where is the parity boundary?**"
 
 ---
 
@@ -69,7 +69,7 @@ The WAV files are the input to BOTH systems — no live mic, so we eliminate hum
 def run_one_turn(audio_wav: Path, backend: str) -> dict:
     t0 = time.perf_counter()
 
-    if backend == "whisperloop":
+    if backend == "impactedgevoice":
         # Feed the WAV through our orchestrator with a synthetic VAD pulse
         result = local_orchestrator.process_wav(audio_wav)
     elif backend == "gemini_live":
@@ -105,11 +105,11 @@ For each conversation chain we record:
 3. **Hallucination rate** — does the response contradict the prior turn? Manual grading; 100 samples is enough for a credible signal.
 4. **Naturalness MOS** — Mean Opinion Score 1-5 by 5 human raters on a 30-sample subset.
 
-Whisperloop's chain accuracy is captured by `bench/bench_context.py` (this commit). Add a `--backend gemini` flag to a future `bench_remote.py` to reuse the same scorer.
+ImpactEdgeVoice's chain accuracy is captured by `bench/bench_context.py` (this commit). Add a `--backend gemini` flag to a future `bench_remote.py` to reuse the same scorer.
 
 ---
 
-## 3. What the Whisperloop Benchmarks Actually Measure
+## 3. What the ImpactEdgeVoice Benchmarks Actually Measure
 
 Two new harnesses in this repo:
 
@@ -148,7 +148,7 @@ This isolates **Memex's marginal contribution** in a way that's directly compara
 Plot CDFs of `audio_first_sample_ms` for both systems on the same 100-turn corpus.
 
 **Expected shape**:
-- Whisperloop has a small p99/p50 ratio (≈ 1.5-2×) — bounded by local hardware.
+- ImpactEdgeVoice has a small p99/p50 ratio (≈ 1.5-2×) — bounded by local hardware.
 - Gemini Live has a long right tail (p99/p50 ≈ 3-5×) — dominated by network jitter and provider GC pauses.
 
 The interesting claim is *not* that the median is faster (it might not be), but that **the variance is bounded and predictable** locally.
@@ -156,7 +156,7 @@ The interesting claim is *not* that the median is faster (it might not be), but 
 ### B. Reasoning quality at parity model size
 
 Run our `conversation_chains.json` against:
-- Whisperloop with Llama 3.2 3B Q4 (our default)
+- ImpactEdgeVoice with Llama 3.2 3B Q4 (our default)
 - Gemini Live with `gemini-2.5-flash` (closest size-class competitor)
 
 Score with the same `expected_keyword` heuristic. This is **not** a comprehensive benchmark — it's a smoke test on whether the local model is "in the ballpark" for the kind of follow-up reasoning a voice assistant actually does.
@@ -166,8 +166,8 @@ Score with the same `expected_keyword` heuristic. This is **not** a comprehensiv
 Gemini Live keeps an in-session context (within one websocket). It does NOT persist across sessions or compact when the context fills.
 
 We run:
-1. **Cross-session recall**: prime in session A, query in session B, 24 hours later. Whisperloop: should hit via Memex DB. Gemini Live: should miss (no DB).
-2. **Long conversation**: 50 turns about varying topics. Whisperloop: `LivePruner` fires around turn 25-30 (depends on n_ctx); recall stays high. Gemini Live: behavior is undocumented — likely either drops old turns silently or rejects the websocket.
+1. **Cross-session recall**: prime in session A, query in session B, 24 hours later. ImpactEdgeVoice: should hit via Memex DB. Gemini Live: should miss (no DB).
+2. **Long conversation**: 50 turns about varying topics. ImpactEdgeVoice: `LivePruner` fires around turn 25-30 (depends on n_ctx); recall stays high. Gemini Live: behavior is undocumented — likely either drops old turns silently or rejects the websocket.
 
 This is the most differentiated claim: **persistent, queryable, local memory** isn't something the cloud APIs offer at all.
 
@@ -175,13 +175,13 @@ This is the most differentiated claim: **persistent, queryable, local memory** i
 
 Worth stating in the report even though it isn't a benchmark:
 
-- **Cost**: a 30-minute daily session at Gemini Live ≈ $1.50-4.50/day ≈ $45-135/month. Whisperloop: $0 marginal.
-- **Privacy**: enterprise/regulated users (medical, legal, defense) can't send audio to a cloud provider. Whisperloop runs in airgapped environments.
-- **Offline**: airplane, basement, SCIF, rural — Whisperloop works.
+- **Cost**: a 30-minute daily session at Gemini Live ≈ $1.50-4.50/day ≈ $45-135/month. ImpactEdgeVoice: $0 marginal.
+- **Privacy**: enterprise/regulated users (medical, legal, defense) can't send audio to a cloud provider. ImpactEdgeVoice runs in airgapped environments.
+- **Offline**: airplane, basement, SCIF, rural — ImpactEdgeVoice works.
 
 ### E. Hardware sensitivity
 
-Whisperloop's latency is bound to local hardware. We'd run the harness on:
+ImpactEdgeVoice's latency is bound to local hardware. We'd run the harness on:
 - M3 Pro MBP (high-end consumer)
 - Intel i7 + RTX 3060 (mid-range desktop)
 - Ryzen 7 + no GPU (CPU-only edge case)

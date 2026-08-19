@@ -1,20 +1,20 @@
 """
-whisperloop.main — single user-facing entry point.
+impactedgevoice.main — single user-facing entry point.
 
 Behaviour:
   * No args   → interactive menu (Voice / File / Text Q&A / Status / Benchmark)
-  * Any args  → forward to the scripted CLI (whisperloop.cli)
+  * Any args  → forward to the scripted CLI (impactedgevoice.cli)
 
 Examples:
-    python -m whisperloop                           # interactive menu
-    python -m whisperloop "summarize paper.pdf"     # one-shot file mode
-    python -m whisperloop "what is 2+2?"            # one-shot text mode
+    python -m impactedgevoice                           # interactive menu
+    python -m impactedgevoice "summarize paper.pdf"     # one-shot file mode
+    python -m impactedgevoice "what is 2+2?"            # one-shot text mode
 """
 
 import logging
 import sys
 
-from whisperloop.console import configure_logging
+from impactedgevoice.console import configure_logging
 
 
 def main() -> None:
@@ -24,15 +24,15 @@ def main() -> None:
 
     # No CLI args → interactive menu
     if len(sys.argv) == 1:
-        from whisperloop.menu import run_menu
+        from impactedgevoice.menu import run_menu
         try:
             run_menu()
         except KeyboardInterrupt:
-            print("\nWhisperloop gracefully terminated.")
+            print("\nImpactEdgeVoice gracefully terminated.")
         return
 
     # Any args → defer to the scripted CLI
-    from whisperloop.cli import main as cli_main
+    from impactedgevoice.cli import main as cli_main
     cli_main()
 
 
